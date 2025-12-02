@@ -1,29 +1,40 @@
-(function() {
-  
-function applicationPreferences() {}
+const exec = require("cordova/exec");
 
-applicationPreferences.prototype.get = function(key,success,fail) 
-{
-    var args = {};
-    args.key = key;
-    cordova.exec(success,fail,"applicationPreferences","getSetting",[args]);
+module.exports = {
+  /**
+   * Reads iOS application preferences
+   *
+   * @param key {string} The key of the preference
+   * @param success {function} The callback invoked after the preference value has been retrieved
+   * @param fail {function} The callback invoked if retrieving the preference value has been failed
+   */
+  get: function (key, success, fail) {
+    const args = {key: key};
+    exec(success, fail, "ApplicationPreferences", "getSetting", [args]);
+  },
+  /**
+   * Stores iOS application preferences
+   *
+   * @param key {string} The key of the preference
+   * @param value {string} The value of the preference, only string values are supported
+   * @param success {function} The callback invoked after the preference value has been stored
+   * @param fail {function} The callback invoked if storing the preference value has been failed
+   */
+  set: function (key, value, success, fail) {
+    const args = {key: key, value: value};
+    exec(success, fail, "ApplicationPreferences", "setSetting", [args]);
+  },
 };
 
-applicationPreferences.prototype.set = function(key,value,success,fail) 
-{
-    var args = {};
-    args.key = key;
-    args.value = value;
-    cordova.exec(success,fail,"applicationPreferences","setSetting",[args]);
-};
-
-
-if(!window.plugins) {
-    window.plugins = {};
+module.exports.withPromises = {
+  get: function (key) {
+    return new Promise(function (resolve, reject) {
+      module.exports.get(key, resolve, reject);
+    });
+  },
+  set: function (key, value) {
+    return new Promise(function (resolve, reject) {
+      module.exports.set(key, value, resolve, reject);
+    });
+  },
 }
-if ( ! window.plugins.applicationPreferences ) {
-    window.plugins.applicationPreferences = new applicationPreferences();
-}
-
-})();
-

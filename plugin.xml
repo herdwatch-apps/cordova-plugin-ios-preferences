@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0"
-    id="com.phonegap.plugins.applicationpreferences"
-    version="1.0.0">
-
-    <name>applicationPreferences</name>
-
+<plugin xmlns="http://www.phonegap.com/ns/plugins/1.0" id="@herdwatch/cordova-plugin-ios-preferences" version="1.0.6">
+    <name>@herdwatch/cordova-plugin-ios-preferences</name>
+    <description>Cordova plugin to read and store iOS application preferences</description>
+    <license>MIT</license>
+    <keywords>cordova,ios,preferences</keywords>
+    <repo>https://github.com/herdwatch-apps/cordova-plugin-ios-preferences.git</repo>
+    <issue>https://github.com/herdwatch-apps/cordova-plugin-ios-preferences/issues</issue>
     <engines>
-        <engine name="cordova" version=">=3.0.0" />
+        <engine name="cordova" version=">=3.0.0"/>
     </engines>
-
     <!-- ios -->
     <platform name="ios">
-        <js-module src="www/applicationPreferences.js" name="applicationPreferences">
-            <clobbers target="applicationPreferences" />
+        <hook type="before_prepare" src="scripts/ios/after_plugin_install.js" />
+        <hook type="before_plugin_uninstall" src="scripts/ios/before_plugin_uninstall.js" />
+        <js-module src="www/applicationPreferences.js" name="ApplicationPreferences">
+            <clobbers target="applicationPreferences"/>
         </js-module>
-
         <config-file target="config.xml" parent="/*">
-            <feature name="applicationPreferences">
-                <param name="ios-package" value="applicationPreferences" />
+            <feature name="ApplicationPreferences">
+                <param name="ios-package" value="ApplicationPreferences"/>
             </feature>
         </config-file>
-
         <!-- Note: the ios src is based off src/ios implicitly -->
-        <header-file src="src/ios/applicationPreferences.h" />
-        <source-file src="src/ios/applicationPreferences.m" />
+        <header-file src="src/ios/ApplicationPreferences.h"/>
+        <source-file src="src/ios/ApplicationPreferences.m"/>
     </platform>
 </plugin>

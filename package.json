@@ -1,0 +1,34 @@
+{
+  "name": "@herdwatch/cordova-plugin-ios-preferences",
+  "version": "1.0.6",
+  "description": "Cordova plugin to read and store iOS application preferences",
+  "cordova": {
+    "id": "@herdwatch/cordova-plugin-ios-preferences",
+    "platforms": [
+      "ios"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/herdwatch-apps/cordova-plugin-ios-preferences.git"
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios"
+  ],
+  "engines": [
+    {
+      "name": "cordova",
+      "version": ">=3.0.0"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/herdwatch-apps/cordova-plugin-ios-preferences/issues"
+  },
+  "homepage": "https://github.com/herdwatch-apps/cordova-plugin-ios-preferences#readme",
+  "dependencies": {
+    "xcode": "^3.0.1",
+    "xml-js": "^1.6.11"
+  }
+}
