@@ -1,5 +1,17 @@
 # Application Preferences plugin for Cordova iOS #
 
+## Why this fork exists
+
+Forked from [upstream](https://github.com/escio/cordova-ios-application-preferences) because the original plugin used a deprecated `writeJavascript` callback bridge and had no automated way to wire a `Settings.bundle` into the host app's Xcode project.
+
+Published as [`@herdwatch/cordova-plugin-ios-preferences`](https://www.npmjs.com/package/@herdwatch/cordova-plugin-ios-preferences).
+
+Changes from upstream:
+- Rewrote the native iOS plugin (`applicationPreferences` → `ApplicationPreferences.h`/`.m`) to reply via `CDVPluginResult`/`commandDelegate` instead of the deprecated `writeJavascript` bridge.
+- Added a `withPromises` wrapper (`get`/`set`) to the JS API alongside the original callback style.
+- Added Cordova install/uninstall hook scripts (`scripts/ios/*`, new `xcode`/`xml-js` dependencies) that automatically add a `Settings.bundle` to the host app's Xcode project.
+- Added `package.json` (none existed upstream), an example `Settings.bundle`, and an MIT `LICENSE`.
+
 Use this Cordova plugin to read and store iOS application preferences.
 
 ## Getting started
