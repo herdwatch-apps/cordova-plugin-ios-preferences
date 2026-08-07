@@ -1,6 +1,6 @@
 {
   "name": "@herdwatch/cordova-plugin-ios-preferences",
-  "version": "1.0.6",
+  "version": "1.0.6-fix.1",
   "description": "Cordova plugin to read and store iOS application preferences",
   "cordova": {
     "id": "@herdwatch/cordova-plugin-ios-preferences",
