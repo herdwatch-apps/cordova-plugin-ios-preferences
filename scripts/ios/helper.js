@@ -5,12 +5,22 @@ var utilities = require("../lib/utilities");
 
 module.exports = {
 
+  getAppFolderName: function () {
+    var configName = utilities.getAppName();
+    if (fs.existsSync(path.join("platforms", "ios", configName))) {
+      return configName;
+    }
+    // Since cordova-ios 8.0.0 the generated Xcode project/target is always named "App",
+    // regardless of the <name> set in config.xml.
+    return "App";
+  },
+
   getXcodeProjectPath: function () {
-    return path.join("platforms", "ios", utilities.getAppName() + ".xcodeproj", "project.pbxproj");
+    return path.join("platforms", "ios", module.exports.getAppFolderName() + ".xcodeproj", "project.pbxproj");
   },
 
   addSettingsBundle: function (context, xcodeProjectPath) {
-    const appName = utilities.getAppName();
+    const appName = module.exports.getAppFolderName();
     const settingsDirectorySource = `${context.opts.projectRoot}/resources/ios/Settings.bundle`;
     const settingsDirectoryTarget = `platforms/ios/${appName}/Resources/Settings.bundle`;
     const xcodeProject = xcode.project(xcodeProjectPath);
@@ -34,7 +44,7 @@ module.exports = {
   },
 
   removeSettingsBundle: function (context, xcodeProjectPath) {
-    const appName = utilities.getAppName();
+    const appName = module.exports.getAppFolderName();
     const appSettingsDirectoryDirectory = `platforms/ios/${appName}/Resources/Settings.bundle`;
     const xcodeProject = xcode.project(xcodeProjectPath);
     xcodeProject.parseSync();
