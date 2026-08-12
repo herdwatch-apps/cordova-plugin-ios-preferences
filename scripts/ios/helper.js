@@ -30,7 +30,7 @@ module.exports = {
       utilities.log(`Preparing Settings.bundle on iOS`);
       try {
         fs.cpSync(settingsDirectorySource, settingsDirectoryTarget, {recursive: true});
-        const appPBXGroup = xcodeProject.findPBXGroupKey({name: 'Resources'});
+        const appPBXGroup = xcodeProject.findPBXGroupKey({name: 'Resources'}) || xcodeProject.findPBXGroupKey({path: 'Resources'});
         const addResourceFile = xcodeProject.addResourceFile('Settings.bundle', {
           lastKnownFileType: 'wrapper.plug-in',
           name: 'Settings.bundle',
@@ -50,7 +50,7 @@ module.exports = {
     xcodeProject.parseSync();
     if (utilities.directoryExists(appSettingsDirectoryDirectory)) {
       utilities.log(`Remove Settings.bundle`);
-      const appPBXGroup = xcodeProject.findPBXGroupKey({name: 'Resources'});
+      const appPBXGroup = xcodeProject.findPBXGroupKey({name: 'Resources'}) || xcodeProject.findPBXGroupKey({path: 'Resources'});
       xcodeProject.removeResourceFile('Settings.bundle', {
         lastKnownFileType: 'wrapper.plug-in',
         name: 'Settings.bundle',
