@@ -31,11 +31,20 @@ module.exports = {
       try {
         fs.cpSync(settingsDirectorySource, settingsDirectoryTarget, {recursive: true});
         const appPBXGroup = xcodeProject.findPBXGroupKey({name: 'Resources'}) || xcodeProject.findPBXGroupKey({path: 'Resources'});
-        const addResourceFile = xcodeProject.addResourceFile('Settings.bundle', {
+        const resourceFile = xcodeProject.addResourceFile('Settings.bundle', {
           lastKnownFileType: 'wrapper.plug-in',
           name: 'Settings.bundle',
         }, appPBXGroup);
-        console.log(addResourceFile);
+        // addResourceFile answers false when the reference is already in the project, which is
+        // every prepare after the first.
+        if (resourceFile) {
+          // `xcode` writes every field of its file reference, so an option it was not given lands
+          // in project.pbxproj as the bare token `undefined` -- which Xcode reads as a file type
+          // name. The bundle is copied either way; this keeps the generated project honest.
+          const fileReference = xcodeProject.pbxFileReferenceSection()[resourceFile.fileRef];
+          delete fileReference.fileEncoding;
+          delete fileReference.explicitFileType;
+        }
         fs.writeFileSync(path.resolve(xcodeProjectPath), xcodeProject.writeSync());
       } catch (error) {
         utilities.error(error);

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<widget id="com.example.iospreferences" version="1.0.0" xmlns="http://www.w3.org/ns/widgets">
+  <name short="Prefs">PrefsExample</name>
+  <description>Reads and writes a Settings.bundle preference through the plugin</description>
+  <author>Example</author>
+  <content src="index.html" />
+  <access origin="*" />
+  <platform name="ios">
+    <preference name="deployment-target" value="14.0" />
+  </platform>
+</widget>
