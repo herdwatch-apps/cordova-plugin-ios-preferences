@@ -1,1 +1,7 @@
 /node_modules/
+/example/node_modules/
+/example/platforms/
+/example/plugins/
+/example/resources/
+/example/*.tgz
+/example/package-lock.json

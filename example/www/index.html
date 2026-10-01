@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Application preferences example</title>
+    <style>
+      body { font: 15px -apple-system, sans-serif; margin: 0; padding: 48px 16px 16px; }
+      h1 { font-size: 17px; }
+      button { font-size: 15px; padding: 8px 12px; margin: 0 6px 6px 0; }
+      pre { background: #f2f2f2; padding: 10px; border-radius: 6px; white-space: pre-wrap; word-break: break-all; }
+    </style>
+  </head>
+  <body>
+    <h1>applicationPreferences</h1>
+    <div>
+      <button id="read">Read</button>
+      <button id="write">Write a new value</button>
+    </div>
+    <pre id="out">waiting for deviceready…</pre>
+    <script src="cordova.js"></script>
+    <script>
+      // The key the shipped example Settings.bundle declares.
+      var KEY = 'preferencekey';
+      // A key no Settings.bundle declares, so the plugin has to report a failure for it.
+      var MISSING_KEY = 'aKeyThatDoesNotExist';
+      var TIMEOUT_MS = 4000;
+
+      var out = document.getElementById('out');
+      var probe = (window.probe = { ready: false, bridge: null, results: [] });
+
+      function render() {
+        out.textContent = JSON.stringify(probe, null, 2);
+      }
+
+      // Calls the raw callback API and records WHICH callback fired, or that neither did within the
+      // timeout. A promise that never settles cannot be told apart from a slow one through
+      // withPromises alone, and that is exactly the failure this fixture exists to catch.
+      function call(label, run) {
+        return new Promise(function (resolve) {
+          var done = false;
+          var started = Date.now();
+          var finish = function (outcome, value) {
+            if (done) return;
+            done = true;
+            resolve({ call: label, outcome: outcome, value: value === undefined ? null : value, ms: Date.now() - started });
+          };
+          setTimeout(function () { finish('NEITHER CALLBACK FIRED', null); }, TIMEOUT_MS);
+          try {
+            run(function (v) { finish('success', v); }, function (e) { finish('fail', e); });
+          } catch (e) {
+            finish('threw', String(e));
+          }
+        });
+      }
+
+      function read() {
+        probe.bridge = typeof applicationPreferences === 'undefined' ? 'ABSENT' : Object.keys(applicationPreferences).join(',');
+        probe.results = [];
+        render();
+        if (probe.bridge === 'ABSENT') return Promise.resolve();
+        return call('get ' + KEY, function (ok, fail) { applicationPreferences.get(KEY, ok, fail); })
+          .then(function (r) {
+            probe.results.push(r);
+            render();
+            return call('get ' + MISSING_KEY, function (ok, fail) { applicationPreferences.get(MISSING_KEY, ok, fail); });
+          })
+          .then(function (r) { probe.results.push(r); render(); });
+      }
+
+      document.getElementById('read').addEventListener('click', read);
+      document.getElementById('write').addEventListener('click', function () {
+        var value = 'written at ' + new Date().toISOString();
+        call('set ' + KEY, function (ok, fail) { applicationPreferences.set(KEY, value, ok, fail); })
+          .then(function (r) { probe.results.push(r); render(); return read(); });
+      });
+
+      document.addEventListener('deviceready', function () {
+        probe.ready = true;
+        probe.cordova = window.cordova && cordova.version;
+        probe.launchedAt = new Date().toISOString();
+        read();
+      }, false);
+
+      // The Settings app can change a value while this app is running, and iOS does not restart the
+      // app when it does — so anything that wants the current value has to re-read it here.
+      document.addEventListener('resume', function () {
+        probe.resumedAt = new Date().toISOString();
+        read();
+      }, false);
+    </script>
+  </body>
+</html>

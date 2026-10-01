@@ -1,0 +1,21 @@
+{
+  "name": "cordova-plugin-ios-preferences-example",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A one-screen Cordova app that exercises the plugin on a simulator or a device",
+  "scripts": {
+    "setup": "mkdir -p resources/ios && cp -R ../src/ios/Settings.bundle resources/ios/ && npm pack .. --pack-destination . --silent && npm install ./herdwatch-cordova-plugin-ios-preferences-*.tgz --no-save",
+    "build": "cordova build ios --emulator --debug"
+  },
+  "dependencies": {
+    "cordova-ios": "8.1.1"
+  },
+  "cordova": {
+    "platforms": [
+      "ios"
+    ],
+    "plugins": {
+      "@herdwatch/cordova-plugin-ios-preferences": {}
+    }
+  }
+}
